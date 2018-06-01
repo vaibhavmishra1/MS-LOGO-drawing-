@@ -1,18 +1,20 @@
 
 String rc;
-char inData[20]; // Allocate some space for the string
-char inChar=-1; // Where to store the character read
-byte index = 0; // Index into array; where to store the character
-int ledPin = 13; // Set the pin to digital I/O 4
+
+
 
 void setup() {
     Serial.begin(9600);
   pinMode(LED_BUILTIN, OUTPUT);
 }
-int comp(char* This){
+
+char* comp(){
+    char inData[20];
+    char inChar=-1; // Where to store the character read
  while(Serial.available())
  {
    inChar = Serial.read(); 
+     byte index = 0;
  
      inData[index] = inChar; 
      index++; 
@@ -24,33 +26,64 @@ int comp(char* This){
     
  }
 
- if(strcmp(inData,This)  == 0){
-   for(int i=0;i<19;i++){
-     inData[i]=0;
-   }
-   index=0;
-   return(0);
 
- }
- else{
-   return(1);
-
-
- }
-}
-void loop() { 
-  
-       if(comp("fd")==0)
-       {
-                
-                delay(1000);
-        }
-          else if(comp("bk")==0)
-       {
-            
-            delay(1000);  
-            
-      }
    
+   index=0;
+   return inData;
+}
+
+
+
+class fd()
+{
+       private:
+    char *ch;
+    int num; //distance motor to move forward
+    public:
+    fd()
+    {
+        
+    }
+};
+class bk()
+{
+     char ch[]=comp();
+      int num=ch.toInt(); //distance motor to move backward
+};
+class rt()
+{
+    char ch[]=comp();
+      int num=ch.toInt(); //angle motor move to turn right
+};
+class lt()
+{
+     char ch[]=comp();
+      int num=ch.toInt(); //angle motor move to turn left
+};
+class repeat()
+{
+};
+void loop() { 
+        char ch[]=comp();
+       if(strcmp(ch,"fd")==0))
+       {
+              
+        }
+         else if(comp("bk")==0)
+       {
+               
+      }
+         else if(comp("rt")==0)
+       {
+               
+      }
+        else if(comp("lt")==0)
+       {
+               
+      }
+     else if(comp("repeat")==0)
+       {
+               
+      }
 }
 
