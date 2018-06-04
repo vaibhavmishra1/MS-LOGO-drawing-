@@ -1,4 +1,4 @@
-#include <Stepper.h>
+#include <MyStepper.h>
 #include<math.h>
 #include <USBAPI.h>
 
@@ -40,9 +40,9 @@ void step2(Stepper mot1, Stepper mot2, int time) {
             //steps_left--;
             // step the motor to step number 0, 1, ..., {3 or 10}
             if (mot1.pin_count == 5)
-                stepMotor(mot1.step_number % 10);
+                mot1.stepMotor(mot1.step_number % 10);
             else
-                stepMotor(mot1.step_number % 4);
+                mot1.stepMotor(mot1.step_number % 4);
 
             if(micros()-mot2.last_step_time>mot2.step_delay)
             {
@@ -67,9 +67,9 @@ void step2(Stepper mot1, Stepper mot2, int time) {
                 //steps_left--;
                 // step the motor to step number 0, 1, ..., {3 or 10}
                 if (mot2.pin_count == 5)
-                    stepMotor(mot2.step_number % 10);
+                    mot2.stepMotor(mot2.step_number % 10);
                 else
-                    stepMotor(mot2.step_number % 4);
+                    mot2.stepMotor(mot2.step_number % 4);
             }
 
         }
@@ -122,51 +122,12 @@ void bk(int x){
 
 
 void setup() {
+    // put your setup code here, to run once:
     Serial.begin(9600);
-  pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
 
+void loop() {
+    // put your main code here, to run repeatedly:
 
-
-
-char* comp(){
-  char inData[20];
-  char inChar=-1; // Where to store the character read
-  while(Serial.available()){
-    inChar = Serial.read(); 
-    byte index = 0;
-    inData[index] = inChar; 
-    index++; 
-    if(inChar=='\n') {
-     break;
-    }
-  }
-   index=0;
-   return inData;
-}
-
-
-
-void loop() { 
-        char ch[]=comp();
-       if(strcmp(ch,"fd")==0))
-       {
-              
-        }
-         else if(comp("bk")==0)
-       {
-               
-      }
-         else if(comp("rt")==0)
-       {
-               
-      }
-        else if(comp("lt")==0)
-       {
-               
-      }
-     else if(comp("repeat")==0)
-       {
-               
-      }
 }
