@@ -1,6 +1,7 @@
-#include <MyStepper.h>
+#include <Stepper.h>
 #include<math.h>
 #include <USBAPI.h>
+#include <String.h>
 
 #define StepsPerRevolution 200   //Change according to motor
 #define pitch 1 //Pitch of ballscrew
@@ -79,9 +80,7 @@ void step2(Stepper mot1, Stepper mot2, int time) {
 
 float angle=0,pi=3.14;
 float motx,moty;
-
-motx=100*sinf(angle);
-moty=100*cosf(angle);
+String inData;
 
 void radtodeg(){
     angle=angle*(180/pi);
@@ -121,13 +120,53 @@ void bk(int x){
 }
 
 
+void comp(){
+    char inChar=-1; // Where to store the character read
+ while(Serial.available())
+ {
+   inChar = Serial.read();  
+     inData = inData + inChar;
+    if(inChar=='\n') 
+   {
+     break;
+   }    
+ }
+   //return inData;
+}
+
+
 void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
     pinMode(LED_BUILTIN, OUTPUT);
 }
 
-void loop() {
-    // put your main code here, to run repeatedly:
 
+void loop() {
+
+  motx=100*sinf(angle);
+  moty=100*cosf(angle);
+  
+  comp();
+  if(inData=="fd"){
+    comp();
+    int x=inData.toInt();
+    fd(x);                  
+  }
+  if(inData=="bk"){
+    comp();
+    int x=inData.toInt();
+    bk(x);
+  }
+  if(inData=="rt"){
+    comp();
+    float x=inData.toFloat();
+    rt(x);         
+  }
+  if(inData=="lt"){
+    comp();
+    float x=inData.toFloat();
+    lt(x);         
+  }
 }
+
