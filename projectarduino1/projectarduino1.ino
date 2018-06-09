@@ -83,45 +83,64 @@ float motx,moty;
 String inData;
 
 void radtodeg(){
+    
     angle=angle*(180/pi);
 }
 
 void degtorad(){
+    radtodeg();
     angle=angle*(pi/180);
+    degtorad();
 }
 
-void rt(float x){
+void rt(float x)
+{
     radtodeg();
     angle+=x;
     degtorad();
+   
 }
 
 
 void lt(float x){
-    radtodeg();
+    
     angle-=x;
-    degtorad();
+    
+   
 }
 
 void fd(int x){
-    xmotor.setSpeed(motx);
-    ymotor.setSpeed(moty);
+    int k=abs(motx);
+    int l=abs(moty);
+    
+    xmotor.setSpeed(k+0.0001);
+    ymotor.setSpeed(l+0.0001);
+    if(moty<0)
+    {
+        ymotor->direction=1;
+    }
+     if(motx<0)
+    {
+        xmotor->direction=1;
+    }
     step2(xmotor,ymotor,x);
-    xmotor.setSpeed(0);
-    ymotor.setSpeed(0);
+    xmotor.setSpeed(0.0001);
+    ymotor.setSpeed(0.0001);
 }
 
 void bk(int x){
-    xmotor.setSpeed(-motx);
-    ymotor.setSpeed(-moty);
+    xmotor.setSpeed(-motx-0.0001);
+    ymotor.setSpeed(-moty-0.0001);
     step2(xmotor,ymotor,x);
-    xmotor.setSpeed(0);
-    ymotor.setSpeed(0);
+    xmotor.setSpeed(0.0001);
+    ymotor.setSpeed(0.0001);
 }
 
-
+string inData="";
 void comp(){
-    char inChar=-1; // Where to store the character read
+    char inChar=-1; 
+    string inData="";
+    // Where to store the character read
  while(Serial.available())
  {
    inChar = Serial.read();  
@@ -131,7 +150,7 @@ void comp(){
      break;
    }    
  }
-   //return inData;
+   
 }
 
 
@@ -143,7 +162,7 @@ void setup() {
 
 
 void loop() {
-
+    
   motx=100*sinf(angle);
   moty=100*cosf(angle);
   
@@ -168,5 +187,8 @@ void loop() {
     float x=inData.toFloat();
     lt(x);         
   }
+    if(inData=="repeat" || inData="]" || inData="[")
+    {
+        loop();
+    }
 }
-
