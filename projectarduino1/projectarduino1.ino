@@ -159,36 +159,97 @@ void setup() {
     Serial.begin(9600);
     pinMode(LED_BUILTIN, OUTPUT);
 }
-
-
+int z=0;
+int flag=0;
 void loop() {
     
   motx=100*sinf(angle);
   moty=100*cosf(angle);
-  
+ 
   comp();
+     
   if(inData=="fd"){
+      if(flag==0)
+      {
     comp();
+      }
+      else if(flag==1)
+      {
+          indata=str[z+1];
+          z++;
+      }
     int x=inData.toInt();
     fd(x);                  
   }
   if(inData=="bk"){
+       if(flag==0)
+      {
     comp();
+      }
+      else if(flag==1)
+      {
+          indata=str[z+1];
+          z++;
+      }
     int x=inData.toInt();
     bk(x);
   }
   if(inData=="rt"){
+       if(flag==0)
+      {
     comp();
+      }
+      else if(flag==1)
+      {
+          indata=str[z+1];
+          z++;
+      }
     float x=inData.toFloat();
     rt(x);         
   }
   if(inData=="lt"){
+       if(flag==0)
+      {
     comp();
+      }
+      else if(flag==1)
+      {
+          indata=str[z+1];
+          z++;
+      }
     float x=inData.toFloat();
     lt(x);         
   }
-    if(inData=="repeat" || inData="]" || inData="[")
-    {
-        loop();
-    }
+        if(inData=="repeat")
+        {
+            comp();
+             int times=inData.toInt();
+            comp();
+                        if(indata=="[")
+                        {
+
+                                             String str[100];
+                                                int count=0;
+                                            loop();
+                                            while(indata!="]")
+                                            {
+
+                                                str[count]=indata;
+                                                count++;
+                                                loop();
+
+                                            }
+                                            flag=1;
+                                            for(int y=0;y<times;y++)
+                                            {
+                                                for(z=0;z<count;z++)
+                                                {
+                                                    indata=str[z];
+                                                    loop();
+                                                }
+                                            }
+
+                        }
+
+          }
 }
