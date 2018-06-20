@@ -103,9 +103,9 @@ void rt(float x)
 
 
 void lt(float x){
-    
+    radtodeg();
     angle-=x;
-    
+    degtorad();
    
 }
 
@@ -119,9 +119,17 @@ void fd(int x){
     {
         ymotor->direction=1;
     }
+    else if(moty>=0)
+    {
+        ymotor->direction=0;
+    }
      if(motx<0)
     {
         xmotor->direction=1;
+    }
+    else if(motx>=0)
+    {
+        xmotor->direction=0;
     }
     step2(xmotor,ymotor,x);
     xmotor.setSpeed(0.0001);
