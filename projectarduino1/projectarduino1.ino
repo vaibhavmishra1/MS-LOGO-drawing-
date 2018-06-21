@@ -161,7 +161,8 @@ void comp(){
    
 }
 
-
+String str[100];
+int count=0;
 void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
@@ -236,8 +237,8 @@ void loop() {
                         if(indata=="[")
                         {
 
-                                             String str[100];
-                                                int count=0;
+                                             
+                                              count=0;  
                                             loop();
                                             while(indata!="]")
                                             {
@@ -256,8 +257,11 @@ void loop() {
                                                     loop();
                                                 }
                                             }
+                                            count=0;
+                                            z=0;
 
                         }
 
           }
 }
+/* project complete*/
