@@ -121,6 +121,25 @@ void step2(Stepper mot1, Stepper mot2, long long duration) {  //duration is in m
 }
 
 
+void parabola(float a, float tim){
+  double call_time=micros(),t=0,tp=50*t/a;
+  while(t<tim*1000000){
+    if(tp>1){//slope less than 1
+      xmotor.setSpeed(100);
+      ymotor.setSpeed(10*sqrt(a/t));
+      step2(xmotor,ymotor,500000);
+    }
+    else{//slope greater than 1
+      ymotor.setSpeed(100);
+      xmotor.setSpeed(5000*t/a);
+      step2(xmotor.ymotor,500000);
+    }
+    t=micros()-call_time;
+  }
+}
+
+
+
 void circle(double radius){
   double call_time=micros(),t=0,omega=100/radius;
   while(t<((2*3.14/omega)*10000000))
