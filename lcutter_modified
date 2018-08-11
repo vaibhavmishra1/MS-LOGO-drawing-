@@ -1,0 +1,137 @@
+#include<Stepper.h>
+
+#define pitch 1
+#define lc 1 //least count of stepper
+
+Stepper xmotor(100,8,9),ymotor(100,10,11);
+
+float X=0,Y=0,pi=3.14;
+bool flaga=true;
+
+void moveMotor(Stepper m){
+  unsigned long now = micros();
+      if (m.direction == 1)
+      {
+        m.step_number++;
+        if (m.step_number == m.number_of_steps) {
+          m.step_number = 0;
+        }
+      }
+      else
+      {
+        if (m.step_number == 0) {
+          m.step_number = m.number_of_steps;
+        }
+        m.step_number--;
+      }
+      if (m.pin_count == 5)
+        m.stepMotor(m.step_number % 10);
+      else
+        m.stepMotor(m.step_number % 4);
+}
+
+void step2(Stepper m1, Stepper m2){
+  int flag=0;
+  if(m1.step_delay>m2.step_delay){
+    Stepper tmp=m1;
+    m1=m2;
+    m2=tmp;
+    flaga=false;  
+  }
+  m1.last_step_time = micros();
+  m2.last_step_time = micros();
+  while(flag==0){
+    long timestamp = micros();
+    if (timestamp - m1.last_step_time >= m1.step_delay)
+    {//Serial.println("m1 step");
+      m1.last_step_time = timestamp;
+      moveMotor(m1);
+      
+      if(flaga){
+          X++;
+         Serial.print("X= ");
+         Serial.print(X);
+         Serial.println();
+      }
+      else{
+        Y++;
+        Serial.print("Y= ");
+        Serial.print(Y);
+        Serial.println();
+      }
+      
+      if (timestamp - m2.last_step_time >= m2.step_delay){
+        //Serial.println("m2 step");
+        m2.last_step_time = timestamp;
+        moveMotor(m2);
+        if(flaga) {
+          Y++;
+          Serial.print("Y= ");
+          Serial.print(Y);
+          Serial.println("");
+        }
+        else {
+          X++;
+          Serial.print("X= ");
+          Serial.print(X);
+          Serial.println("");
+        }
+        flag++;
+        //break;
+      }
+      
+    }
+    //Serial.println(X);
+    //Serial.println(Y);  
+    //delay(2);
+}
+    //Serial.println(Y);
+    //delay(2);
+}
+
+void line(long int m, double len){
+  float callx=X,cally=Y;
+  if(m>1){
+      ymotor.setSpeed(1000.0);
+      xmotor.setSpeed((1000.0)/m);
+    }
+    else{
+      ymotor.setSpeed((100.0)*m);
+      xmotor.setSpeed(100.0);
+    } 
+  while(sqrt((X-callx)*(X-callx)+(Y-cally)*(Y-cally))<len){  
+    //Serial.println("line iteration");
+    step2(xmotor,ymotor);
+  }
+}
+
+
+void circle(double radius){
+  int call_time=micros(),t=0;
+  double omega=(1000.0)/radius;
+  while(t<(2000000*pi/omega)){
+    t=micros()-call_time;
+    //Serial.println(-(1000.0)*sin(omega*t));
+    //Serial.println((1000.0)*cos(omega*t));
+    xmotor.setSpeed(-(1000.0)*sin(omega*t));
+    ymotor.setSpeed((1000.0)*cos(omega*t));
+    step2(xmotor,ymotor);
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+  //circle(10.0);
+  line(1,1000);
+  //xmotor.setSpeed(100);
+  //ymotor.setSpeed(900);
+  //step2(xmotor,ymotor);
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  //line(200,1000);
+  // put your main code here, to run repeatedly:
+  delay(1000);
+}
